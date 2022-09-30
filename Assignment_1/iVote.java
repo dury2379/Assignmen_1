@@ -4,50 +4,51 @@ class iVote
 {
 	private Hashtable<String, ArrayList<String>> VotedSet; // keys are student ID's, values are all their votes
 	private Hashtable<String, Integer> VoteStat; // keys are all of the answers, values atre couts of each answer
+	private Question question;
+	private ArrayList<String> choices;
 	
-	// Just initializes set of students that voted, along with their votes
+	// Just initializes set of students that voted, along with their votes and question
 	// Also initializes the sts keeping hash set answers are keys and 
 	// value is count.
-	iVote()
+	iVote(Question question)
 	{
-		VotedSet = new Hashtable<String, String>();
+		this.question = question;
+		choices = this.question.getChoices();
+		VotedSet = new Hashtable<String,  ArrayList<String>>();
 		VoteStat = new Hashtable<String, Integer>();
+		for(String key : choices)
+		{
+			VoteStat.put(key, 0);
+		}
 	}
 	
 	// first get students answer. then checks if it is a forst vote.
 	// if it is, then the student is added to Voted Set.
 	// Then each of students answers is added to VoteStat.
 	// If ansewr does not exsist, then it is added.
-	void vote(Student stu, Question q)
+	void vote(Student stu)
 	{
-		ArrayList<String> vote = stu.AnswerQuestion(q);
+		ArrayList<String> vote = stu.AnswerQuestion(question);
 		if(VotedSet.containsKey(stu.getID()))
 		{
 			removeVote(stu);
 		}
 		else
 		{
-			VotedSet.put(stu.getID(), vote)
+			VotedSet.put(stu.getID(), vote);
 		}
 		for(int i = 0; i < vote.size(); i++)
 		{
-			if(VoteStat.containsKey(vote.get(i)))
-			{
-				VoteStat.put(vote.get(i), VoteStat.get(vote.get(i)) + 1);
-			}
-			else
-			{
-				VoteStat.put(vote.get(i), 1);
-			}
+			VoteStat.put(vote.get(i), VoteStat.get(vote.get(i)) + 1);
 		}
 	}
 	
+	//prints vote statistic
 	void printVoteStat()
 	{
-		Set<String> keys = VoteStat.keySet();
-		for(String key : keys)
+		for(String key : choices)
 		{
-			System.out.println(VoteStat.get(
+			System.out.println("\"" + key + "\" vote(s): " + VoteStat.get(key));
 		}
 	}
 	
@@ -56,7 +57,7 @@ class iVote
 	{
 		for(int i = 0; i < VotedSet.get(stu.getID()).size(); i ++)
 		{
-			VoteStst.put(VotedSet.get(stu.getID()).get(i), VoteStst.get(VotedSet.get(stu.getID()).get(i)) - 1);
+			VoteStat.put(VotedSet.get(stu.getID()).get(i), VoteStat.get(VotedSet.get(stu.getID()).get(i)) - 1);
 		}
 	}
 }

@@ -4,17 +4,17 @@ import java.lang.Math;
 public class SimulationDriver {
 	
 	private static Student[] students;
-	// private VotingService iVote;
-	private static Question qestion;
+	private static iVote VotingService;
+	private static Question question;
 	
 	public static void main(String[] args){
 		students = new Student[30];
-		for(int i = 0; i < 30; i++)
+		for(int i = 0; i < students.length; i++)		// initialise students array
 		{
 			students[i] = new Student(generateID(10));
 		}
 		
-		if((int)(Math.random() * 2) == 1)
+		if((int)(Math.random() * 2) == 1)		// randomly choose multiple right answer or single
 		{
 			ArrayList right = new ArrayList<String>();
 			right.add("1945");
@@ -22,7 +22,7 @@ public class SimulationDriver {
 			wrong.add("1776");
 			wrong.add("1865");
 			wrong.add("1939");
-			qestion = new Question("When did WWII ended?", right, wrong);
+			question = new Question("When did WWII ended?", right, wrong);
 		}
 		else
 		{
@@ -33,10 +33,32 @@ public class SimulationDriver {
 			wrong.add("15");
 			wrong.add("7");
 			wrong.add("9");
-			qestion = new Question("Select even numbers.", right, wrong);
+			question = new Question("Select even numbers.", right, wrong);
 		}
 		
-		System.out.println(qestion);
+		
+		VotingService = new iVote(question);
+		
+		System.out.println(question);
+		
+		for(int i = 0; i < students.length; i++)		// let evety student vote
+		{
+			VotingService.vote(students[i]);
+		}
+		
+		System.out.println("Stat prior to double-vote: ");
+		VotingService.printVoteStat();	
+		
+		for(int i = 0; i < students.length; i++)		// random second voting (50/50)
+		{
+			if((int)(Math.random() * 2) == 1)
+			{
+				VotingService.vote(students[i]);
+			}
+		}
+		
+		System.out.println("Stat post to double-vote: ");
+		VotingService.printVoteStat();	
 	}
 	
 	
